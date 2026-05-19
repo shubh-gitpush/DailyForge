@@ -2,11 +2,25 @@ import User from "../src/models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+// Demo credentials for testing (development only)
+const DEMO_EMAIL = "demo@dailyforge.dev";
+const DEMO_PASSWORD = "DemoPassword123!";
+const DEMO_ID = "demo_user_test_123";
+const DEMO_ENABLED = process.env.NODE_ENV !== "production";
+
 // sign up function
 export const signup = async (req, res) => {
   try {
     // fetch values from request
     const { name, email, password } = req.body;
+
+    // Demo signup - allow demo email (development only)
+    if (DEMO_ENABLED && email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+      const token = jwt.sign({ userId: DEMO_ID }, process.env.JWT_SECRET, {
+        expiresIn: "24h",
+      });
+      return res.status(201).json({ message: "User registered successfully", token });
+    }
 
     if (!name || name.trim().length < 2) {
       return res.status(400).json({ message: "Name must be at least 2 characters long" });
@@ -70,6 +84,14 @@ export const login = async (req, res) => {
         .json({ message: "Email and password are required" });
     }
 
+    // Demo login - allow demo credentials (development only)
+    if (DEMO_ENABLED && email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+      const token = jwt.sign({ userId: DEMO_ID }, process.env.JWT_SECRET, {
+        expiresIn: "24h",
+      });
+      return res.status(200).json({ message: "Login successful", token });
+    }
+
     // check if user exists or not
     const user = await User.findOne({ email });
     if (!user) {
@@ -106,6 +128,18 @@ export const login = async (req, res) => {
 // access user details function
 export const getUser = async (req, res) => {
   try {
+    // Demo user (development only)
+    if (DEMO_ENABLED && req.userId === DEMO_ID) {
+      return res.status(200).json({
+        success: true,
+        user: {
+          _id: DEMO_ID,
+          name: "Demo User",
+          email: DEMO_EMAIL,
+        },
+      });
+    }
+
     // fetch user data from request
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
