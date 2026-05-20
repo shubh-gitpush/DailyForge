@@ -82,16 +82,16 @@ const seedDatabase = async () => {
     });
     console.log("✓ Created demo user");
 
-    // Create sample tasks
+    // Create sample tasks using updated categories
     const sampleTasks = [
-      { title: "Morning Meditation", duration: 20, color: "#8B5CF6", category: "Wellness" },
-      { title: "Code Review", duration: 60, color: "#3B82F6", category: "Work" },
-      { title: "Project Planning", duration: 45, color: "#EC4899", category: "Work" },
-      { title: "Gym Workout", duration: 60, color: "#EF4444", category: "Fitness" },
-      { title: "Learning Session", duration: 90, color: "#F59E0B", category: "Education" },
-      { title: "Weekly Standup", duration: 30, color: "#10B981", category: "Meeting" },
-      { title: "Read Technical Article", duration: 30, color: "#6366F1", category: "Learning" },
-      { title: "Lunch Break", duration: 60, color: "#14B8A6", category: "Break" },
+      { title: "Morning Meditation", tags: ["Personal"], priority: "High", status: "Due", dueDate: new Date(Date.now() + 86400000) },
+      { title: "Code Review", tags: ["Work"], priority: "High", status: "Due", dueDate: new Date(Date.now() + 86400000) },
+      { title: "Project Planning", tags: ["Work"], priority: "Medium", status: "Due", dueDate: new Date(Date.now() + 2 * 86400000) },
+      { title: "Gym Workout", tags: ["Health"], priority: "Medium", status: "Due", dueDate: new Date(Date.now() + 86400000) },
+      { title: "Learning Session", tags: ["Learning"], priority: "Low", status: "Due", dueDate: new Date(Date.now() + 3 * 86400000) },
+      { title: "Weekly Standup", tags: ["Work"], priority: "High", status: "Due", dueDate: new Date(Date.now() + 86400000) },
+      { title: "Read Technical Article", tags: ["Learning"], priority: "Low", status: "Due", dueDate: new Date(Date.now() + 2 * 86400000) },
+      { title: "Lunch Break", tags: ["Personal"], priority: "Medium", status: "Due", dueDate: new Date(Date.now() + 86400000) },
     ];
 
     const tasks = await Task.create(
@@ -100,7 +100,7 @@ const seedDatabase = async () => {
         userId: demoUser._id,
       }))
     );
-    console.log(`✓ Created ${tasks.length} sample tasks`);
+    console.log(`✓ Created ${tasks.length} sample tasks with updated categories`);
 
     // Create sample routine
     await Routine.create({
