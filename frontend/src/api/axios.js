@@ -1,19 +1,10 @@
 import axios from "axios";
 
-// Determine API base URL based on environment
-const getBaseURL = () => {
-  // Development: use local backend
-  if (import.meta.env.DEV) {
-    return "http://localhost:5000/api/";
-  }
-  // Production: use deployed backend URL
-  return import.meta.env.VITE_API_URL || "https://dailyforge-backend.onrender.com/api/";
-};
-
 // create axios instance
 const api = axios.create({
-  baseURL: getBaseURL(),
-  timeout: 5000,
+  baseURL: import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:5000/api/" : "https://dailyforge-backend.onrender.com/api/"),
+  timeout: Number(import.meta.env.VITE_API_TIMEOUT) || 15000,
+  withCredentials: true,
 });
 
 // Handle response errors, including timeout
